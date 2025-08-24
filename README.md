@@ -39,4 +39,4 @@ Dự án này giúp phân tích, trực quan hóa và tổng hợp dữ liệu A
 - [Cộng đồng DBT](https://community.getdbt.com/)
 
 ## Tác giả
-Dự án phát triển bởi đội ngũ phân tích dữ liệu.
+Dự án cá nhân thực hiện bởi Nguyen Nhuong - nhuongblue@gmail.com
