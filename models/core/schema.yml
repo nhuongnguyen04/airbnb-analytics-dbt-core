@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  - name: dim_hosts
+    description: "Bảng dimension cho máy chủ, chứa thông tin chi tiết về máy chủ."
+    columns:
+      - name: host_id
+        description: "Mã định danh duy nhất cho host."
+        tests:
+          - unique
+          - not_null
+      - name: host_name
+        description: "Tên của host."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              min_value: 2
+      - name: is_superhost
+        description: "Chỉ định xem host có phải là siêu host hay không."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: created_at
+        description: "Thời gian tạo host."
+      - name: updated_at
+        description: "Thời gian cập nhật thông tin host."
+  - name: dim_listings
+    columns:
+      - name: listing_id
+        description: "Mã định danh duy nhất cho mỗi danh sách."
+        tests:
+          - unique
+          - not_null
+      - name: listing_name
+        description: "Tên của danh sách."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              min_value: 5
+      - name: room_type
+        description: "Loại phòng được liệt kê."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Entire home/apt', 'Private room', 'Shared room', 'Hotel room']
+
+      - name: minimum_nights
+        description: "Số đêm tối thiểu yêu cầu cho một đặt phòng."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 3650
+              strictly: true
+      - name: price
+        description: "Giá của danh sách."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 10000
+              strictly: true
+      - name: listing_domain
+        description: "Tên miền của URL danh sách."
+      - name: host_id
+        description: "ID của host liên kết với danh sách."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hosts')
+              field: host_id
+  - name: dim_date
+    description: "Bảng dimension cho ngày tháng."
+    columns:
+      - name: date_id
+        description: "Mã định danh duy nhất cho mỗi ngày."
+        tests:
+          - unique
+          - not_null
+      - name: date
+        description: "Ngày thực tế."
+      - name: month
+        description: "Tháng của ngày."
+      - name: year
+        description: "Năm của ngày."
+      - name: quarter
+        description: "Quý của năm."
+      - name: day_of_week
+        description: "Ngày trong tuần."
+      - name: day_name
+        description: "Tên của ngày."
+      - name: month_name
+        description: "Tên của tháng."
+      - name: is_weekend
+        description: "Chỉ định xem ngày có rơi vào cuối tuần hay không."
+  - name: fact_reviews
+    description: "Bảng fact cho các đánh giá, chứa thông tin chi tiết về đánh giá."
+    columns:
+      - name: review_id
+        description: "Mã định danh duy nhất cho mỗi đánh giá."
+        tests:
+          - unique
+          - not_null
+      - name: listing_id
+        description: "ID của danh sách được đánh giá."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_listings')
+              field: listing_id
+      - name: host_id
+        description: "ID của host liên kết với danh sách."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hosts')
+              field: host_id
+      - name: review_date
+        description: "Ngày khi đánh giá được gửi."
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN '2000-01-01' AND current_date"
+      - name: review_sentiment
+        description: "Điểm cảm xúc của đánh giá."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['positive', 'negative', 'neutral']
+      - name: reviewer_name
+        description: "Tên của người đánh giá."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              min_value: 2
+              max_value: 100
+      - name: date_key
+        description: "Khóa ngoại đến bảng dimension ngày."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_id
+
+

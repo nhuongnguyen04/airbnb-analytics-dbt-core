@@ -1,0 +1,17 @@
+
+
+target/
+dbt_packages/
+logs/
+.env
+.vscode/
+.dbt_venv/
+__MACOSX/
+Data/__MACOSX/
+*.log
+*.db
+*.pyc
+*.pyo
+*.sqlite
+*.ipynb_checkpoints/
+.DS_Store

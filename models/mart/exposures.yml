@@ -1,0 +1,46 @@
+version: 2
+
+exposures:
+  - name: weekly_host_performance_report
+    description: "Bảng thông tin này cung cấp tổng quan hàng tuần về số liệu hiệu suất của máy chủ, bao gồm tổng số danh sách, số lượt đánh giá, giá trung bình và phân tích tình cảm."
+    type: dashboard       # Loại exposure, có thể là dashboard
+    maturity: low         # Mức độ trưởng thành: low
+    url: https://bi-tool.com/dashboards/weekly-host-performance  # URL giả lập của báo cáo BI
+    depends_on:
+      - ref('agg_host_performance')
+    owner: 
+      name: Manh Nhuong
+      email: nhuongblue@gmail.com
+
+  - name: monthly_room_type_trends_report
+    description: "Bảng thông tin này làm nổi bật các xu hướng hàng tháng về loại phòng, bao gồm giá trung bình và số lượt đánh giá."
+    type: dashboard       # Loại exposure, có thể là dashboard
+    maturity: low         # Mức độ trưởng thành: low
+    url: https://bi-tool.com/dashboards/monthly-room-type-trends  # URL giả lập của báo cáo BI
+    depends_on:
+      - ref('agg_room_type_trends')
+    owner: 
+      name: Manh Nhuong
+      email: nhuongblue@gmail.com
+
+  - name: listing_popularity_analysis
+    description: "Bảng thông tin này phân tích độ phổ biến của các danh sách dựa trên số lượt đánh giá và phân tích tình cảm trung bình."
+    type: dashboard       # Loại exposure
+    maturity: low         # Mức độ trưởng thành: low
+    url: https://bi-tool.com/reports/listing-popularity-analysis  # URL giả lập của báo cáo BI
+    depends_on:
+      - ref('agg_reviews_by_listing')
+    owner: 
+      name: Manh Nhuong
+      email: nhuongblue@gmail.com
+
+  - name: daily_review_sentiment_report
+    description: "Bảng thông tin này cung cấp cái nhìn hàng ngày về xu hướng tình cảm của các đánh giá trên tất cả các danh sách."
+    type: dashboard       # Loại exposure
+    maturity: low         # Mức độ trưởng thành: low
+    url: https://bi-tool.com/reports/daily-review-sentiment  # URL giả lập của báo cáo BI
+    depends_on:
+      - ref('agg_daily_reviews')
+    owner: 
+      name: Manh Nhuong
+      email: nhuongblue@gmail.com

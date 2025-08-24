@@ -1,0 +1,83 @@
+version: 2
+models:
+  - name: agg_host_performance
+    description: Đánh giá tổng hợp theo từng danh sách để phân tích mức độ phổ biến và tình cảm
+    columns:
+      - name: host_id
+        description: Mã định danh duy nhất cho host
+        tests:
+          - not_null
+      - name: listing_count
+        description: Tổng số danh sách cho host
+      - name: review_count
+        description: Tổng số đánh giá cho host
+      - name: avg_price_per_listing
+        description: Giá trung bình cho mỗi danh sách của host
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: avg_sentiment
+        description: Điểm cảm xúc trung bình cho các danh sách của host
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN -1 AND 1"
+  - name: agg_review_by_listing
+    description: Đánh giá tổng hợp theo từng danh sách để phân tích mức độ phổ biến và tình cảm
+    columns:
+      - name: listing_id
+        description: Mã định danh duy nhất cho danh sách
+        tests:
+          - not_null
+      - name: review_count
+        description: Tổng số đánh giá cho danh sách
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: avg_sentiment
+        description: Điểm cảm xúc trung bình cho danh sách
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN -1 AND 1"
+      - name: last_review_date
+        description: Ngày của đánh giá gần nhất cho danh sách
+
+  - name: agg_room_type_trends
+    description: Xu hướng tổng hợp cho các loại phòng dựa trên đánh giá và giá cả
+    columns:
+      - name: room_type
+        description: Loại phòng được liệt kê
+        tests:
+          - not_null
+      - name: total_listings
+        description: Tổng số danh sách cho loại phòng
+      - name: avg_price
+        description: Giá trung bình cho loại phòng
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: review_count
+        description: Tổng số đánh giá cho loại phòng
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+  - name: agg_daily_reviews
+    description: Đánh giá tổng hợp hàng ngày cho phân tích xu hướng
+    columns:
+      - name: date_key
+        description: Ngày của các đánh giá
+        tests:
+          - not_null
+      - name: review_count
+        description: Tổng số đánh giá cho ngày
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: unique_listing_count
+        description: Tổng số danh sách duy nhất được đánh giá cho ngày
+      - name: unique_host_count
+        description: Tổng số host duy nhất được đánh giá cho ngày
+      - name: avg_sentiment
+        description: Điểm cảm xúc trung bình cho các đánh giá của ngày
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "BETWEEN -1 AND 1"

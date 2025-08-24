@@ -1,0 +1,76 @@
+version: 2
+
+sources:
+  - name: airbnb
+    description: "Dữ liệu nguồn cho dự án Airbnb Analytics"
+    database: dbt_project
+    schema: airbnb
+    tables:
+      - name: listings
+        description: "Bảng chứa dữ liệu danh sách Airbnb"
+        columns:
+          - name: id
+            description: "Mã định danh duy nhất cho mỗi danh sách"
+            tests:
+              - unique
+              - not_null
+          - name: listing_url
+            description: "URL của danh sách Airbnb"
+          - name: name
+            description: "Tên của danh sách Airbnb"
+          - name: room_type
+            description: "Loại phòng được cung cấp trong danh sách"
+          - name: minimum_nights
+            description: "Số đêm tối thiểu yêu cầu để đặt phòng"
+          - name: host_id
+            description: "Mã định danh cho chủ nhà của danh sách"
+            tests:
+              - relationships:
+                  to: ref('hosts')
+                  field: id
+          - name: price
+            description: "Giá mỗi đêm cho danh sách"
+          - name: created_at
+            description: "Thời gian khi danh sách được tạo"
+          - name: updated_at
+            description: "Thời gian khi danh sách được cập nhật lần cuối"
+      - name: reviews
+        description: "Bảng chứa dữ liệu đánh giá Airbnb"
+        columns:
+          - name: review_id
+            description: "Mã định danh duy nhất cho mỗi đánh giá"
+            tests:
+              - unique
+              - not_null
+          - name: listing_id
+            description: "Mã định danh cho danh sách được đánh giá"
+            tests:
+              - relationships:
+                  to: ref('listings')
+                  field: id
+          - name: review_date
+            description: "Ngày khi đánh giá được viết"
+          - name: reviewer_name
+            description: "Tên của người đánh giá"
+            tests:
+              - not_null
+          - name: comments
+            description: "Nội dung của đánh giá"
+          - name: sentiment
+            description: "Điểm cảm xúc của đánh giá"
+      - name: hosts
+        description: "Bảng chứa dữ liệu chủ nhà Airbnb"
+        columns:
+          - name: id
+            description: "Mã định danh duy nhất cho mỗi chủ nhà"
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: "Tên của chủ nhà"
+          - name: is_superhost
+            description: "Cho biết liệu chủ nhà có phải là Superhost hay không"
+          - name: created_at
+            description: "Thời gian khi chủ nhà được tạo"
+          - name: updated_at
+            description: "Thời gian khi chủ nhà được cập nhật lần cuối"
